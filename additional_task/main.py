@@ -81,6 +81,7 @@ def main():
     new_position = calculate_new_position(centers)
     result = perspective_image.copy()
     cv2.circle(result, (new_position[0], new_position[1]), new_position[2], (0, 0, 255), 2)
+    cv2.circle(result, (centers[1][0], centers[1][1]), centers[1][2], (0, 0, 255), 2)
     cv2.circle(result, (centers[0][0], centers[0][1]), centers[0][2], (255, 0, 0), 2)
 
     end = calculate_vector(centers)
