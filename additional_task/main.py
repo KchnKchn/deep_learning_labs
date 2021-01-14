@@ -31,7 +31,7 @@ def find_corners(chessboard_points, image_shape):
 
 def get_destination_corners(image_shape):
     h, w = image_shape[:2]
-    return np.float32([[w-120, h-1], [w-120, h-90], [w-1, h-90], [w-1, h-1]])
+    return np.float32([[w-117, h-1], [w-117, h-90], [w-1, h-90], [w-1, h-1]])
 
 def get_perspective_image(image, source_corners, destination_corners, destination_shape):
     h, w = destination_shape
@@ -59,6 +59,16 @@ def calculate_new_position(points):
     new_y = np.uint16(A[1] - np.around((A[1] - B[1]) * k))
     return (new_x, new_y, B[2])
 
+def calculate_vector(points):
+    A, B = points
+    theta = np.arctan2(A[1]-B[1], A[0]-B[0])
+    endpt_x = int(A[0] + 1000*np.cos(theta))
+    endpt_y = int(A[1] + 1000*np.sin(theta))
+    return (endpt_x, endpt_y)
+
+def print_vector(image, start, end):
+    cv2.line(image, start, end, 255, 2)
+
 def main():
     chessboard_shape = (5, 7)
     image = cv2.imread("small_image.jpg")
@@ -71,6 +81,9 @@ def main():
     new_position = calculate_new_position(centers)
     result = perspective_image.copy()
     cv2.circle(result, (new_position[0], new_position[1]), new_position[2], (0, 0, 255), 4)
+
+    end = calculate_vector(centers)
+    print_vector(result, centers[0][:2], end)
 
     cv2.imshow("source image", image)
     cv2.imshow("image with centers", image_with_centers)
